@@ -21,7 +21,7 @@
 	// cell constructor
 	function Cell () {
 		this.stat  = 0;
-		this.win   = 0;
+		// this.win   = 0;
 		this.reach = 0;
 		this.po    = -1;
 		this.id    = null;
@@ -65,6 +65,7 @@
 
 	// initialize new game
 	function newGame () {
+
 		win = false;
 		enabled = true;
 		addx0 = [1, 0, -1, -1, -1, 0];
@@ -78,8 +79,8 @@
 				cel[i][j] = new Cell();
 			}
 		}
-		cat.x = Math.floor(15 / 2);
-		cat.y = Math.floor(15 / 2);
+		cat.x = 5;
+		cat.y = 5;
 		cat.px =  20 + 34 * cat.x;
 		cat.py = -15 + 26 * cat.y;
 		cel[cat.y][cat.x].stat = 1;
@@ -91,8 +92,9 @@
 		lmax = 1;
 		lx2 = [];
 		ly2 = [];
-		for (var i = 2; i < 15 - 2; i++) {
-			for (var j = 2; j < 15 - 2; j++) {
+		// stat 0 = bisa dilewati , 1 = tempat kucing saat ini & bisa di klik, 2 = tidak bisa di klik 
+		for (var i = 2; i < 13; i++) {
+			for (var j = 2; j < 13; j++) {
 				cel[i][j].stat = 1;
 			}
 		}
@@ -120,8 +122,8 @@
 			}
 		}
 		// draw the board game
-		for (var i = 0; i < 11; i++) {
-			for (var j = 0; j < 11; j++) {
+		for (var i = 0; i < 9; i++) {
+			for (var j = 0; j < 9; j++) {
 				cel[i + 2][j + 2].createElement(i, j);
 			}
 		}
@@ -172,6 +174,7 @@
 						this.py += 26 * this.dirY[dir];
 						enabled = true;
 					}
+					console.log(dir);
 					this.display(this.px, this.py, id);
 				}.bind(this), i * 64);
 			}
@@ -215,12 +218,15 @@
 			for (var i = 0; i < 6; ++i) {
 				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
 				var y = this.y + addy0[i];
-				if (cel[y][x].stat != 1) continue;
-				if (cel[y][x].win) {
+				if (cel[y][x].stat != 1) {
+					console.log(cel[y][x]);
+					continue;
+				}else if (cel[y][x].win) {
 					this.x = x;
 					this.y = y;
 					this.dir = i;
 					win = true;
+					console.log(cel[y][x]);
 					return true;
 				}
 			}
@@ -233,17 +239,18 @@
 			lx[0] = this.x;
 			ly[0] = this.y;
 			var m = 1;
-			var n = 999;
+			var n = 0; //iq kucing
 			for (var po = 1; po < 200; po++) {
 				var p = 0;
 				for (var i = 0; i < m; ++i) {
 					var x = lx[i];
 					var y = ly[i];
 					for (var k = 0; k < 6; ++k) {
-						var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
+						var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]); //if y % 2 == true , then (x + addx1[k]) else (x + addx0[k])
 						var ky = y + addy0[k];
-						if (cel[ky][kx].stat != 1) continue;
-						if (cel[ky][kx].po >= 0) continue;
+						if (cel[ky][kx].stat != 1){
+							continue;
+						}else if (cel[ky][kx].po >= 0) continue;
 						cel[ky][kx].po = po;
 						lx2[p] = kx;
 						ly2[p] = ky;
@@ -258,7 +265,7 @@
 				}
 				m = p;
 			}
-			if (n == 999) return false;
+			if (n == 0) return false;
 			p = 0;
 			for (var i = 0; i < 15; ++i) {
 				for (var j = 0; j < 15; ++j) {
@@ -341,7 +348,7 @@
 						var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
 						var ny = i + addy0[k];
 						if (cel[ny][nx].win) {
-							++cel[i][j].reach;
+							cel[i][j].reach++;
 						}
 					}
 				}
