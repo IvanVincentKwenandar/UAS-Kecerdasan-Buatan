@@ -160,7 +160,7 @@
 
 		// SVG update
 		display: function (x, y) {
-			this.shape.setAttributeNS(null, "fill", "#066420")
+			this.shape.setAttributeNS(null, "fill", "#480032")
 			this.shape.setAttributeNS(null, "transform", 'translate(' + x + ',' + y + ')');
 			this.shape.setAttributeNS(xlinkns, "xlink:href", "#ass");
 			//console.log(cel);
