@@ -18,16 +18,16 @@
 	var enabled = true, win = false;
 	var addx0, addy0, addx1, addy1, cel, lx, ly, ld, lmax, lx2, ly2;
 
-	// cell constructor
+	// Constructor Cell
 	function Cell () {
 		this.stat  = 0;
-		this.win   = 0;
+		this.isEdge   = 0;
 		this.reach = 0;
 		this.po    = -1;
 		this.id    = null;
 	}
 
-	// create SVG plot
+	// Buat plot SVG
 	Cell.prototype.createElement = function (i, j) {
 		var x = 2 * 34 + j * 34 + ((i % 2) ? 1 : -1) * 34 / 4;
 		var y = 2 * 26 + i * 26;
@@ -46,7 +46,7 @@
 		board.appendChild(use);
 	}
 
-	// human plays
+	// Function click , digunakan ketika player mengklik batu bata
 	function click(use, x, y) {
 		if (enabled && cel[y][x].stat != 2) {
 			if (x == cat.x && y == cat.y) return;
@@ -63,7 +63,7 @@
 		}
 	}
 
-	// initialize new game
+	// Menyiapkan area untuk game baru
 	function newGame () {
 		win = false;
 		enabled = true;
@@ -96,7 +96,7 @@
 				cel[i][j].stat = 1;
 			}
 		}
-		// place random plots (10 more than in the original)
+		// Merandom letak bata merah yang tidak bisa dilewati kucing(bata hitam) pada awal game
 		for (var i = 0; i < 24; i++) {
 			var rx = Math.floor(Math.random() * 12);
 			var ry = Math.floor(Math.random() * 12);
@@ -114,24 +114,24 @@
 					var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
 					var ny = i + addy0[k];
 					if (cel[ny][nx].stat == 0) { // --> Value = 1, check  = 0
-						// Tepi edge diberi value '1'
-						cel[i][j].win = 1;
+						// Tepi edge diberi value 1 untuk menandakan bahwa itu edge
+						cel[i][j].isEdge = 1;
 					}
 				}
 			}
 		}
-		// draw the board game
+		// Merender board permainan
 		for (var i = 0; i < 8; i++) {
 			for (var j = 0; j < 8; j++) {
 				cel[i + 2][j + 2].createElement(i, j);
 			}
 		}
-		// display cat
+		// Mendisplay bata hitam(cat)
 		game.setAttributeNS(null, "fill-opacity", 1);
 		cat.display(cat.px, cat.py);
 	}
 
-	// reset
+	// reset permainan
 	function reset () {
 		cat.display(0, 0);
 		var alpha = 100;
@@ -147,7 +147,7 @@
 		}
 	}
 
-	// the Cat
+	// function untuk bata hitam(cat)
 	var cat = {
 		shape: document.getElementById("player"),
 		x: 0,
@@ -165,7 +165,7 @@
 			//console.log(cel);
 			// uses.setAttributeNS(null, "fill", "#fff");
 		},
-		// move the cat
+		// function jump untuk bata hitam pindah tempat
 		jump: function (dir) {
 			for (var i = 1; i < 6; i++) {
 				var frame = 1;
@@ -200,7 +200,7 @@
 				}.bind(this), t * 64);
 			}
 		},
-		// can go out?
+		// Mengecek apakah bata hitam(kucing) dapat kabur
 		goOut: function () {
 			for (var i = 0; i < 6; ++i) {
 				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
@@ -214,7 +214,7 @@
 			}
 			return false;
 		},
-		// can win?
+		// Mengecek apakah bata hitam(cat) bisa escape dan menang
 		gotoWin: function () {
 			for (var i = 0; i < 6; ++i) {
 				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
@@ -224,7 +224,7 @@
 					//console.log("Check");
 					continue;
 				} 
-				else if (cel[y][x].win) {
+				else if (cel[y][x].isEdge) {
 					this.x = x;
 					this.y = y;
 					this.dir = i;
@@ -258,7 +258,7 @@
 						lx2[p] = kx;
 						ly2[p] = ky;
 						p++;
-						if (cel[ky][kx].win && po < n){
+						if (cel[ky][kx].isEdge && po < n){
 							n = po;
 						}
 					}
@@ -276,7 +276,7 @@
 			p = 0;
 			for (var i = 0; i < 15; ++i) {
 				for (var j = 0; j < 15; ++j) {
-					if (cel[i][j].po == n && cel[i][j].win) {
+					if (cel[i][j].po == n && cel[i][j].isEdge) {
 						lx[p] = j;
 						ly[p] = i;
 						p++;
@@ -319,7 +319,7 @@
 			}
 			return false;
 		},
-		// random move
+		// pergerakan random bata hitam(cat)
 		randMove: function () {
 			var x = this.x;
 			var y = this.y;
@@ -340,7 +340,7 @@
 			this.dir = ld[d];
 			return true;
 		},
-		// play function
+		// main function saat bermain
 		play: function () {
 			for (var i = 0; i < 15; i++) {
 				for (var j = 0; j < 15; j++) {
@@ -354,7 +354,7 @@
 					for (var k = 0; k < 6; k++) {
 						var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
 						var ny = i + addy0[k];
-						if (cel[ny][nx].win) {
+						if (cel[ny][nx].isEdge) {
 							++cel[i][j].reach;
 						}
 					}
@@ -378,7 +378,7 @@
 		}
 	}
 
-	// start
+	// memulai game
 	newGame();
 
 }();
