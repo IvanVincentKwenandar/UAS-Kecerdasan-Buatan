@@ -21,7 +21,7 @@
 	// cell constructor
 	function Cell () {
 		this.stat  = 0;
-		// this.win   = 0;
+		this.win   = 0;
 		this.reach = 0;
 		this.po    = -1;
 		this.id    = null;
@@ -36,7 +36,7 @@
 		use.cy = i + 2;
 		this.id = use;
 		use.setAttributeNS(null, "class", "cell");
-		use.setAttributeNS(xlinkns, "xlink:href", "#r0");
+		use.setAttributeNS(xlinkns, "xlink:href", "#init");
 		use.setAttributeNS(null, "transform", "translate(" + x + "," + y + ")");
 		use.setAttributeNS(null, "fill", this.stat == 2 ? "#eb3434" : "#34d9eb");
 		use.onclick = use.ontouchstart = function (e) {
@@ -65,7 +65,6 @@
 
 	// initialize new game
 	function newGame () {
-
 		win = false;
 		enabled = true;
 		addx0 = [1, 0, -1, -1, -1, 0];
@@ -80,7 +79,7 @@
 			}
 		}
 		cat.x = 5;
-		cat.y = 5;
+		cat.y = 6;
 		cat.px =  20 + 34 * cat.x;
 		cat.py = -15 + 26 * cat.y;
 		cel[cat.y][cat.x].stat = 1;
@@ -92,9 +91,8 @@
 		lmax = 1;
 		lx2 = [];
 		ly2 = [];
-		// stat 0 = bisa dilewati , 1 = tempat kucing saat ini & bisa di klik, 2 = tidak bisa di klik 
-		for (var i = 2; i < 13; i++) {
-			for (var j = 2; j < 13; j++) {
+		for (var i = 2; i < 15 - 2; i++) {
+			for (var j = 2; j < 15 - 2; j++) {
 				cel[i][j].stat = 1;
 			}
 		}
@@ -115,26 +113,27 @@
 				for (var k = 0; k < 6; k++) {
 					var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
 					var ny = i + addy0[k];
-					if (cel[ny][nx].stat == 0) {
+					if (cel[ny][nx].stat == 0) { // --> Value = 1, check  = 0
+						// Tepi edge diberi value '1'
 						cel[i][j].win = 1;
 					}
 				}
 			}
 		}
 		// draw the board game
-		for (var i = 0; i < 9; i++) {
-			for (var j = 0; j < 9; j++) {
+		for (var i = 0; i < 8; i++) {
+			for (var j = 0; j < 8; j++) {
 				cel[i + 2][j + 2].createElement(i, j);
 			}
 		}
 		// display cat
 		game.setAttributeNS(null, "fill-opacity", 1);
-		cat.display(cat.px, cat.py, "f30");
+		cat.display(cat.px, cat.py);
 	}
 
 	// reset
 	function reset () {
-		cat.display(0, 0, "");
+		cat.display(0, 0);
 		var alpha = 100;
 		for (var i = 0; i < 100; i++) {
 			setTimeout(function () {
@@ -150,7 +149,7 @@
 
 	// the Cat
 	var cat = {
-		shape: document.getElementById("cat"),
+		shape: document.getElementById("player"),
 		x: 0,
 		y: 0,
 		px: 0,
@@ -158,10 +157,13 @@
 		dir: 0,
 		dirX: [1, 0.5, -0.5, -1, -0.5, 0.5],
 		dirY: [0, 1, 1, 0, -1, -1],
+
 		// SVG update
-		display: function (x, y, id) {
+		display: function (x, y) {
 			this.shape.setAttributeNS(null, "transform", 'translate(' + x + ',' + y + ')');
-			this.shape.setAttributeNS(xlinkns, "xlink:href", "#" + id);
+			this.shape.setAttributeNS(xlinkns, "xlink:href", "#ass");
+			//console.log(cel);
+			// uses.setAttributeNS(null, "fill", "#fff");
 		},
 		// move the cat
 		jump: function (dir) {
@@ -174,8 +176,7 @@
 						this.py += 26 * this.dirY[dir];
 						enabled = true;
 					}
-					console.log(dir);
-					this.display(this.px, this.py, id);
+					this.display(this.px, this.py);
 				}.bind(this), i * 64);
 			}
 		},
@@ -192,7 +193,7 @@
 					if (frame == 5) frame = 2;
 						this.px += 0.4 * 34 * this.dirX[dir];
 						this.py += 0.4 * 26 * this.dirY[dir];
-					this.display(this.px, this.py, id);
+					this.display(this.px, this.py);
 					if (end++ == 18) {
 						reset();
 					}
@@ -218,15 +219,18 @@
 			for (var i = 0; i < 6; ++i) {
 				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
 				var y = this.y + addy0[i];
-				if (cel[y][x].stat != 1) {
-					console.log(cel[y][x]);
+				if (cel[y][x].stat != 1){
+					// Inner counter as divide by 1/3 part of the map
+					console.log("Check");
 					continue;
-				}else if (cel[y][x].win) {
+				} 
+				else if (cel[y][x].win) {
 					this.x = x;
 					this.y = y;
 					this.dir = i;
+					// Inner counter escapes the map
+					console.log("Done");
 					win = true;
-					console.log(cel[y][x]);
 					return true;
 				}
 			}
@@ -239,18 +243,17 @@
 			lx[0] = this.x;
 			ly[0] = this.y;
 			var m = 1;
-			var n = 0; //iq kucing
+			var n = 999;
 			for (var po = 1; po < 200; po++) {
 				var p = 0;
 				for (var i = 0; i < m; ++i) {
 					var x = lx[i];
 					var y = ly[i];
 					for (var k = 0; k < 6; ++k) {
-						var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]); //if y % 2 == true , then (x + addx1[k]) else (x + addx0[k])
+						var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
 						var ky = y + addy0[k];
-						if (cel[ky][kx].stat != 1){
-							continue;
-						}else if (cel[ky][kx].po >= 0) continue;
+						if (cel[ky][kx].stat != 1) continue;
+						if (cel[ky][kx].po >= 0) continue;
 						cel[ky][kx].po = po;
 						lx2[p] = kx;
 						ly2[p] = ky;
@@ -265,7 +268,7 @@
 				}
 				m = p;
 			}
-			if (n == 0) return false;
+			if (n == 999) return false;
 			p = 0;
 			for (var i = 0; i < 15; ++i) {
 				for (var j = 0; j < 15; ++j) {
@@ -348,7 +351,7 @@
 						var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
 						var ny = i + addy0[k];
 						if (cel[ny][nx].win) {
-							cel[i][j].reach++;
+							++cel[i][j].reach;
 						}
 					}
 				}
