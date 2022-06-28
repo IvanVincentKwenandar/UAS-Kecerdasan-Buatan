@@ -91,23 +91,23 @@
 		lmax = 1;
 		lx2 = [];
 		ly2 = [];
-		for (var i = 2; i < 15 - 2; i++) {
-			for (var j = 2; j < 15 - 2; j++) {
+		for (var i = 2; i < 12 - 2; i++) {
+			for (var j = 2; j < 12 - 2; j++) {
 				cel[i][j].stat = 1;
 			}
 		}
 		// place random plots (10 more than in the original)
-		for (var i = 0; i < 30; i++) {
-			var rx = Math.floor(Math.random() * 15);
-			var ry = Math.floor(Math.random() * 15);
+		for (var i = 0; i < 24; i++) {
+			var rx = Math.floor(Math.random() * 12);
+			var ry = Math.floor(Math.random() * 12);
 			if (rx != cat.x && ry != cat.y) {
 				if (cel[ry][rx].stat == 1) {
 					cel[ry][rx].stat = 2;
 				}
 			}
 		}
-		for (var i = 0; i < 15; i++) {
-			for (var j = 0; j < 15; j++) {
+		for (var i = 0; i < 12; i++) {
+			for (var j = 0; j < 12; j++) {
 				if (cel[i][j].stat != 1) 
                 continue;
 				for (var k = 0; k < 6; k++) {
