@@ -221,7 +221,7 @@
 				var y = this.y + addy0[i];
 				if (cel[y][x].stat != 1){
 					// Inner counter as divide by 1/3 part of the map
-					console.log("Check");
+					//console.log("Check");
 					continue;
 				} 
 				else if (cel[y][x].win) {
@@ -229,7 +229,7 @@
 					this.y = y;
 					this.dir = i;
 					// Inner counter escapes the map
-					console.log("Done");
+					//console.log("Done");
 					win = true;
 					return true;
 				}
@@ -243,7 +243,7 @@
 			lx[0] = this.x;
 			ly[0] = this.y;
 			var m = 1;
-			var n = 999;
+			var n = 0;
 			for (var po = 1; po < 200; po++) {
 				var p = 0;
 				for (var i = 0; i < m; ++i) {
@@ -258,7 +258,9 @@
 						lx2[p] = kx;
 						ly2[p] = ky;
 						p++;
-						if (cel[ky][kx].win && po < n) n = po;
+						if (cel[ky][kx].win && po < n){
+							n = po;
+						}
 					}
 				}
 				if (p == 0) break;
@@ -268,7 +270,9 @@
 				}
 				m = p;
 			}
-			if (n == 999) return false;
+			if (n == 999){
+				return false;
+			}
 			p = 0;
 			for (var i = 0; i < 15; ++i) {
 				for (var j = 0; j < 15; ++j) {
