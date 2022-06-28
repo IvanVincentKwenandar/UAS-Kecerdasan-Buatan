@@ -38,7 +38,7 @@
 		use.setAttributeNS(null, "class", "cell");
 		use.setAttributeNS(xlinkns, "xlink:href", "#init");
 		use.setAttributeNS(null, "transform", "translate(" + x + "," + y + ")");
-		use.setAttributeNS(null, "fill", this.stat == 2 ? "#eb3434" : "#34d9eb");
+		use.setAttributeNS(null, "fill", this.stat == 2 ? "#937DC2" : "#EEB0B0");
 		use.onclick = use.ontouchstart = function (e) {
 			e.preventDefault();
 			click(this, this.cx, this.cy);
@@ -51,7 +51,7 @@
 		if (enabled && cel[y][x].stat != 2) {
 			if (x == cat.x && y == cat.y) return;
 			enabled = false;
-			use.setAttributeNS(null, "fill", "#eb3434");
+			use.setAttributeNS(null, "fill", "#937DC2");
 			if (win) {
 				// run the cat, run!
 				cat.play();
@@ -243,7 +243,7 @@
 			lx[0] = this.x;
 			ly[0] = this.y;
 			var m = 1;
-			var n = 0;
+			var n = 999;
 			for (var po = 1; po < 200; po++) {
 				var p = 0;
 				for (var i = 0; i < m; ++i) {
