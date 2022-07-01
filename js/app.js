@@ -252,22 +252,27 @@
 			ly[0] = this.y;
 			var m = 1;
 			var n = 999;
-			for (var po = 1; po < 200; po++) {
+			var n_change = 0;
+			var nearestEdgeX = new Array(0);
+			var nearestEdgeY = new Array(0);
+			for (var iter = 1; iter < 200 && n_change == 0; iter++) {
 				var p = 0;
 				for (var i = 0; i < m; ++i) {
 					var x = lx[i];
 					var y = ly[i];
+					if (cel[y][x].isEdge){
+						nearestEdgeX.push(x);
+						nearestEdgeY.push(y);
+						n_change = 1;
+					}
 					for (var k = 0; k < 6; ++k) {
 						var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
 						var ky = y + addy0[k];
-						if (cel[ky][kx].stat != 1) continue;
-						if (cel[ky][kx].po >= 0) continue;
-						cel[ky][kx].po = po;
-						lx2[p] = kx;
-						ly2[p] = ky;
-						p++;
-						if (cel[ky][kx].isEdge && po < n){
-							n = po;
+						if((cel[ky][kx].stat == 1) && (cel[ky][kx].po < 0)){
+							cel[ky][kx].po = iter;
+							lx2[p] = kx;
+							ly2[p] = ky;
+							p++;
 						}
 					}
 				}
@@ -278,34 +283,26 @@
 				}
 				m = p;
 			}
-			if (n == 999){
+			if (n_change == 0){
 				return false;
 			}
-			p = 0;
-			for (var i = 0; i < 15; ++i) {
-				for (var j = 0; j < 15; ++j) {
-					if (cel[i][j].po == n && cel[i][j].isEdge) {
-						lx[p] = j;
-						ly[p] = i;
-						p++;
-					}
-				}
-			}
+
+			//Backtrack
+			p = nearestEdgeX.length;
 			if (p == 0) return false;
 			var d = Math.floor(Math.random() * p);
-			x = lx[d];
-			y = ly[d];
+			x = nearestEdgeX[d];
+			y = nearestEdgeY[d];
 			for (var r = 0; r < 200; ++r) {
 				p = 0;
 				for (var k = 0; k < 6; ++k) {
 					kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
 					ky = y + addy0[k];
-					if (cel[ky][kx].stat != 1) continue;
-					if (cel[ky][kx].po >= cel[y][x].po) continue;
-					lx[p] = kx;
-					ly[p] = ky;
-					ld[p] = k;
-					p++;
+					if ((cel[ky][kx].stat == 1) && (cel[ky][kx].po < cel[y][x].po) && (cel[ky][kx].po >= 0)){
+						lx[p] = kx;
+						ly[p] = ky;
+						p++;
+					}
 				}
 				if (p == 0) return false;
 				d = Math.floor(Math.random() * p);
