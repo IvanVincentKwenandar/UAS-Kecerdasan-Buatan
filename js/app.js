@@ -22,7 +22,6 @@
 	function Cell () {
 		this.stat  = 0;
 		this.isEdge   = 0;
-		this.reach = 0;
 		this.po    = -1;
 		this.id    = null;
 	}
@@ -349,7 +348,6 @@
 		play: function () {
 			for (var i = 0; i < 15; i++) {
 				for (var j = 0; j < 15; j++) {
-					cel[i][j].reach = 0;
 					cel[i][j].po = -1;
 				}
 			}
