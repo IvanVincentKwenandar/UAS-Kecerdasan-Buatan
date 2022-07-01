@@ -202,9 +202,17 @@
 		},
 		// Mengecek apakah bata hitam(kucing) dapat kabur
 		goOut: function () {
+			//i = 6 karena ada 6 bata di sekitar 1 bata hitam (kucing) yang di cek
 			for (var i = 0; i < 6; ++i) {
-				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
+				if (this.y == 0){
+					var x = this.x + addx1[i];
+				}else{
+					var x = this.x + addx0[i];
+				}
 				var y = this.y + addy0[i];
+				// console.log("X:"+x);
+				// console.log("Y:"+y);
+				//kalau status posisi kucing saat ini = 0
 				if (cel[y][x].stat == 0) {
 					this.x = x;
 					this.y = y;
