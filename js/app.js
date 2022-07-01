@@ -320,11 +320,14 @@
 			}
 			return false;
 		},
+
 		// pergerakan random bata hitam(cat)
 		randMove: function () {
 			var x = this.x;
 			var y = this.y;
 			var p = 0;
+
+			// BFS
 			for (var k = 0; k < 6; ++k) {
 				var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
 				var ky = y + addy0[k];
@@ -341,6 +344,7 @@
 			this.dir = ld[d];
 			return true;
 		},
+
 		// main function saat bermain
 		play: function () {
 			for (var i = 0; i < 15; i++) {
