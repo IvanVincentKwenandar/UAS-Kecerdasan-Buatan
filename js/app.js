@@ -29,8 +29,8 @@
 
 	// Buat plot SVG
 	Cell.prototype.createElement = function (i, j) {
-		var x = 2 * 34 + j * 34 + ((i % 2) ? 1 : -1) * 34 / 4;
-		var y = 2 * 26 + i * 26;
+		var x = 68 + (j * 34) + ((i % 2) ? 1 : -1) * 34 / 4;
+		var y = 52 + (i * 26);
 		var use = document.createElementNS(xmlns, "use");
 		use.cx = j + 2;
 		use.cy = i + 2;
