@@ -15,7 +15,7 @@
 		}
 		return false;
 	}
-	var enabled = true, win = false;
+	var enabled = true, canEscape = false;
 	var addx0, addy0, addx1, addy1, cel, lx, ly, ld, lmax, lx2, ly2;
 
 	// Constructor Cell
@@ -47,13 +47,12 @@
 
 	// Function click , digunakan ketika player mengklik batu bata
 	function click(use, x, y) {
+		if (x == cat.x && y == cat.y) return;
 		if (enabled && cel[y][x].stat != 2) {
-			if (x == cat.x && y == cat.y) return;
 			enabled = false;
 			use.setAttributeNS(null, "fill", "#937DC2");
-			if (win) {
-				// run the cat, run!
-				cat.play();
+			if (canEscape) {
+				// membuat kucing lari dari cell
 				cat.run(cat.dir);
 			} else {
 				cel[y][x].stat = 2;
@@ -64,7 +63,7 @@
 
 	// Menyiapkan area untuk game baru
 	function newGame () {
-		win = false;
+		canEscape = false;
 		enabled = true;
 		addx0 = [1, 0, -1, -1, -1, 0];
 		addy0 = [0, 1, 1, 0, -1, -1];
@@ -228,17 +227,13 @@
 				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
 				var y = this.y + addy0[i];
 				if (cel[y][x].stat != 1){
-					// Inner counter as divide by 1/3 part of the map
-					//console.log("Check");
 					continue;
 				} 
 				else if (cel[y][x].isEdge) {
 					this.x = x;
 					this.y = y;
 					this.dir = i;
-					// Inner counter escapes the map
-					//console.log("Done");
-					win = true;
+					canEscape = true;
 					return true;
 				}
 			}
