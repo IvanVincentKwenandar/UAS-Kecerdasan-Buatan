@@ -361,7 +361,9 @@
 			if (!this.goOut()) {
 				if (!this.gotoWin()) {
 					if (!this.getNearest()) {
-						if (!this.randMove()) f = true;
+						if (!this.randMove()){
+							f = true;
+						}
 					}
 				}
 			}
