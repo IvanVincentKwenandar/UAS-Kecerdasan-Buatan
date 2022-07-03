@@ -201,44 +201,61 @@
 		},
 		// Mengecek apakah bata hitam(kucing) dapat kabur
 		goOut: function () {
+			var x, y;
 			//i = 6 karena ada 6 bata di sekitar 1 bata hitam (kucing) yang di cek
 			for (var i = 0; i < 6; ++i) {
-				if (this.y == 0){
-					var x = this.x + addx1[i];
+				if (this.y % 2== 0){
+					x = this.x + addx1[i];
+					// console.log("addx1: " + addx1[i]);
 				}else{
-					var x = this.x + addx0[i];
+					x = this.x + addx0[i];
+					// console.log("addx0: " + addx0[i]);
 				}
-				var y = this.y + addy0[i];
+				y = this.y + addy0[i];
 				// console.log("X:"+x);
 				// console.log("Y:"+y);
-				//kalau status posisi kucing saat ini = 0
+				//kalau status posisi kucing saat ini = 0, maka kucing saat ini ada di edge 
 				if (cel[y][x].stat == 0) {
 					this.x = x;
 					this.y = y;
+					//menentukan arah kabur kucing
 					this.dir = i;
+					//berhasil kabur
 					return true;
 				}
 			}
+			//gagal kabur 
 			return false;
 		},
-		// Mengecek apakah bata hitam(cat) bisa escape dan menang
-		gotoWin: function () {
+		// Mengecek apakah bata hitam(kucing) dapat kabur
+		goOut: function () {
+			var x, y;
+			//i = 6 karena ada 6 bata di sekitar 1 bata hitam (kucing) yang di cek
 			for (var i = 0; i < 6; ++i) {
-				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
-				var y = this.y + addy0[i];
-				if (cel[y][x].stat != 1){
-					continue;
-				} 
-				else if (cel[y][x].isEdge) {
+				if (this.y % 2== 0){
+					x = this.x + addx1[i];
+					// console.log("addx1: " + addx1[i]);
+				}else{
+					x = this.x + addx0[i];
+					// console.log("addx0: " + addx0[i]);
+				}
+				y = this.y + addy0[i];
+				// console.log("X:"+x);
+				// console.log("Y:"+y);
+				//kalau status posisi kucing saat ini = 0, maka kucing saat ini ada di edge 
+				if (cel[y][x].stat == 0) {
 					this.x = x;
 					this.y = y;
+					//menentukan arah kabur kucing
 					this.dir = i;
-					canEscape = true;
+					//berhasil kabur
 					return true;
 				}
 			}
+			//gagal kabur 
 			return false;
 		},
+
 		
 		// find best direction
 		getNearest: function () {
