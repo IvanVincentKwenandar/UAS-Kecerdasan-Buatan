@@ -141,7 +141,7 @@
 					enabled = true;
 					newGame();
 				}
-			}, i * 16);
+			}, i * 20);
 		}
 	}
 
