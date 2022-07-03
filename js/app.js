@@ -132,11 +132,11 @@
 	// reset permainan
 	function reset () {
 		cat.display(0, 0);
-		var alpha = 100;
-		for (var i = 0; i < 100; i++) {
+		var alpha = 50;
+		for (var i = 0; i < 50; i++) {
 			setTimeout(function () {
 				alpha--;
-				game.setAttributeNS(null, "fill-opacity", alpha / 100);
+				game.setAttributeNS(null, "fill-opacity", alpha / 50);
 				if (alpha == 0) {
 					enabled = true;
 					newGame();
