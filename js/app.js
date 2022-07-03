@@ -217,11 +217,11 @@
 					//menentukan arah kabur kucing
 					this.dir = i;
 					//berhasil kabur
-					return true;
+					return false;
 				}
 			}
 			//gagal kabur 
-			return false;
+			return true;
 		},
 		// Mengecek apakah bata hitam(cat) bisa escape dan menang
 		gotoWin: function () {
@@ -236,10 +236,10 @@
 					this.y = y;
 					this.dir = i;
 					canEscape = true;
-					return true;
+					return false;
 				}
 			}
-			return false;
+			return true;
 		},
 		
 		// find best direction
@@ -281,12 +281,12 @@
 				m = p;
 			}
 			if (n_change == 0){
-				return false;
+				return true;
 			}
 
 			//Backtrack
 			p = nearestEdgeX.length;
-			if (p == 0) return false;
+			if (p == 0) return true;
 			var d = Math.floor(Math.random() * p);
 			x = nearestEdgeX[d];
 			y = nearestEdgeY[d];
@@ -301,7 +301,7 @@
 						p++;
 					}
 				}
-				if (p == 0) return false;
+				if (p == 0) return true;
 				d = Math.floor(Math.random() * p);
 				x = lx[d];
 				y = ly[d];
@@ -316,10 +316,10 @@
 							this.dir = (k + 3) % 6;
 						}
 					}
-					return true;
+					return false;
 				}
 			}
-			return false;
+			return true;
 		},
 
 		// pergerakan random bata hitam(cat)
@@ -338,12 +338,12 @@
 				ld[p] = k;
 				p++;
 			}
-			if (p == 0) return false;
+			if (p == 0) return true;
 			var d = Math.floor(Math.random() * p);
 			this.x = lx[d];
 			this.y = ly[d];
 			this.dir = ld[d];
-			return true;
+			return false;
 		},
 
 		// main function saat bermain
@@ -354,10 +354,10 @@
 				}
 			}
 			var f = false;
-			if (!this.goOut()) {
-				if (!this.gotoWin()) {
-					if (!this.getNearest()) {
-						if (!this.randMove()){
+			if (this.goOut()) {
+				if (this.gotoWin()) {
+					if (this.getNearest()) {
+						if (this.randMove()){
 							f = true;
 						}
 					}
