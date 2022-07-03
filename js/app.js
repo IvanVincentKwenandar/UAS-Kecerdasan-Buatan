@@ -357,18 +357,6 @@
 					cel[i][j].po = -1;
 				}
 			}
-			for (i = 0; i < 15; i++) {
-				for (j = 0; j < 15; j++) {
-					if (cel[i][j].stat != 1) continue;
-					for (var k = 0; k < 6; k++) {
-						var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
-						var ny = i + addy0[k];
-						if (cel[ny][nx].isEdge) {
-							++cel[i][j].reach;
-						}
-					}
-				}
-			}
 			var f = false;
 			if (!this.goOut()) {
 				if (!this.gotoWin()) {
