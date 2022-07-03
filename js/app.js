@@ -16,7 +16,7 @@
 		return false;
 	}
 	var enabled = true, canEscape = false;
-	var addx0, addy0, addx1, addy1, cel, lx, ly, ld, lmax, lx2, ly2;
+	var addx0, addy0, addx1, cel, lx, ly, ld, lx2, ly2;
 
 	// Constructor Cell
 	function Cell () {
@@ -28,7 +28,11 @@
 
 	// Buat plot SVG
 	Cell.prototype.createElement = function (i, j) {
-		var x = 68 + (j * 34) + ((i % 2) ? 1 : -1) * 34 / 4;
+		if(i % 2 == 0){
+			var x = 68 + (j * 34) + (-1) * 34 / 4;
+		}else{
+			var x = 68 + (j * 34) + (1) * 34 / 4;
+		}
 		var y = 52 + (i * 26);
 		var use = document.createElementNS(xmlns, "use");
 		use.cx = j + 2;
@@ -37,7 +41,11 @@
 		use.setAttributeNS(null, "class", "cell");
 		use.setAttributeNS(xlinkns, "xlink:href", "#init");
 		use.setAttributeNS(null, "transform", "translate(" + x + "," + y + ")");
-		use.setAttributeNS(null, "fill", this.stat == 2 ? "#937DC2" : "#EEB0B0");
+		if (this.stat == 2){
+			use.setAttributeNS(null, "fill", "#937DC2");
+		}else{
+			use.setAttributeNS(null, "fill", "#EEB0B0");
+		}
 		use.onclick = use.ontouchstart = function (e) {
 			e.preventDefault();
 			click(this, this.cx, this.cy);
@@ -109,7 +117,11 @@
 				if (cel[i][j].stat != 1) 
                 continue;
 				for (var k = 0; k < 6; k++) {
-					var nx = i % 2 ? (j + addx1[k]) : (j + addx0[k]);
+					if(i % 2 == 0){
+						var nx = j + addx0[k];
+					}else{
+						var nx = j + addx1[k];
+					}
 					var ny = i + addy0[k];
 					if (cel[ny][nx].stat == 0) { // --> Value = 1, check  = 0
 						// Tepi edge diberi value 1 untuk menandakan bahwa itu edge
@@ -161,39 +173,19 @@
 			this.shape.setAttributeNS(null, "fill", "#480032")
 			this.shape.setAttributeNS(null, "transform", 'translate(' + x + ',' + y + ')');
 			this.shape.setAttributeNS(xlinkns, "xlink:href", "#ass");
-			//console.log(cel);
-			// uses.setAttributeNS(null, "fill", "#fff");
 		},
 		// function jump untuk bata hitam pindah tempat
 		jump: function (dir) {
-			for (var i = 1; i < 6; i++) {
-				var frame = 1;
-				setTimeout(function () {
-					var id = "f" + dir + (frame++) % 5;
-					if (frame == 6) {
-						this.px += 34 * this.dirX[dir];
-						this.py += 26 * this.dirY[dir];
-						enabled = true;
-					}
-					this.display(this.px, this.py);
-				}.bind(this), i * 20);
-			}
+			this.px += 34 * this.dirX[dir];
+			this.py += 26 * this.dirY[dir];
+			enabled = true;
+			this.display(this.px, this.py);
 		},
 		// run the cat
 		run: function (dir) {
-			var t = 0;
-			for (var i = 1; i < 20; i++) {
-				t++;
-				var end = 0;
-				setTimeout(function () {
-					this.px += 34 * this.dirX[dir];
-					this.py += 26 * this.dirY[dir];
-					end++;
-					if (end == 18) {
-						reset();
-					}
-				}.bind(this), t * 20);
-			}
+			this.px += 34 * this.dirX[dir];
+			this.py += 26 * this.dirY[dir];
+			reset();
 		},
 		// Mengecek apakah bata hitam(kucing) dapat kabur
 		goOut: function () {
@@ -202,31 +194,31 @@
 			for (var i = 0; i < 6; ++i) {
 				if (this.y % 2== 0){
 					x = this.x + addx1[i];
-					// console.log("addx1: " + addx1[i]);
 				}else{
 					x = this.x + addx0[i];
-					// console.log("addx0: " + addx0[i]);
 				}
 				y = this.y + addy0[i];
-				// console.log("X:"+x);
-				// console.log("Y:"+y);
 				//kalau status posisi kucing saat ini = 0, maka kucing saat ini ada di edge 
 				if (cel[y][x].stat == 0) {
 					this.x = x;
 					this.y = y;
 					//menentukan arah kabur kucing
 					this.dir = i;
-					//berhasil kabur
+					//gagal kabur
 					return false;
 				}
 			}
-			//gagal kabur 
+			//berhasil kabur 
 			return true;
 		},
 		// Mengecek apakah bata hitam(cat) bisa escape dan menang
 		gotoWin: function () {
 			for (var i = 0; i < 6; ++i) {
-				var x = this.y % 2 ? this.x + addx1[i] : this.x + addx0[i];
+				if(this.y % 2 == 0){
+					var x = this.x + addx0[i];
+				}else{
+					var x = this.x + addx1[i];
+				}
 				var y = this.y + addy0[i];
 				if (cel[y][x].stat != 1){
 					continue;
@@ -248,7 +240,6 @@
 			lx[0] = this.x;
 			ly[0] = this.y;
 			var m = 1;
-			var n = 999;
 			var n_change = 0;
 			var nearestEdgeX = new Array(0);
 			var nearestEdgeY = new Array(0);
@@ -263,7 +254,11 @@
 						n_change = 1;
 					}
 					for (var k = 0; k < 6; ++k) {
-						var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
+						if(y % 2 == 0){
+							var kx = x + addx0[k];
+						}else{
+							var kx = x + addx1[k];
+						}
 						var ky = y + addy0[k];
 						if((cel[ky][kx].stat == 1) && (cel[ky][kx].po < 0)){
 							cel[ky][kx].po = iter;
@@ -293,7 +288,11 @@
 			for (var r = 0; r < 200; ++r) {
 				p = 0;
 				for (var k = 0; k < 6; ++k) {
-					kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
+					if(y % 2 == 0){
+						kx = x + addx0[k];
+					}else{
+						kx = x + addx1[k];
+					}
 					ky = y + addy0[k];
 					if ((cel[ky][kx].stat == 1) && (cel[ky][kx].po < cel[y][x].po) && (cel[ky][kx].po >= 0)){
 						lx[p] = kx;
@@ -310,7 +309,11 @@
 					this.y = y;
 					this.dir = 0;
 					for (var k = 0; k < 6; ++k) {
-						kx = y % 2 ? x + addx1[k] : x + addx0[k];
+						if(y % 2 == 0){
+							kx = x + addx0[k]
+						}else{
+							kx = x + addx1[k];
+						}
 						ky = y + addy0[k];
 						if (cel[ky][kx].po == 0) {
 							this.dir = (k + 3) % 6;
@@ -330,7 +333,11 @@
 
 			// BFS
 			for (var k = 0; k < 6; ++k) {
-				var kx = y % 2 ? (x + addx1[k]) : (x + addx0[k]);
+				if(y % 2 == 0){
+					var kx = x + addx0[k];
+				}else{
+					var kx = x + addx1[k];
+				}
 				var ky = y + addy0[k];
 				if (cel[ky][kx].stat != 1) continue;
 				lx[p] = kx;
@@ -364,7 +371,7 @@
 				}
 			}
 			if (f) {
-				// car loose
+				// kucing kabur
 				enabled = false;
 				reset();
 			} else {
