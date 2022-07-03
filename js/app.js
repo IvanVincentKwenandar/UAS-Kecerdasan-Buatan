@@ -187,12 +187,10 @@
 				var frame = 1;
 				var end = 0;
 				setTimeout(function () {
-					var id = "f" + dir + frame++;
 					if (frame == 0) frame++;
 					if (frame == 5) frame = 2;
-						this.px += 0.4 * 34 * this.dirX[dir];
-						this.py += 0.4 * 26 * this.dirY[dir];
-					this.display(this.px, this.py);
+						this.px += 34 * this.dirX[dir];
+						this.py += 26 * this.dirY[dir];
 					if (end++ == 18) {
 						reset();
 					}
