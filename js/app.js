@@ -176,7 +176,7 @@
 						enabled = true;
 					}
 					this.display(this.px, this.py);
-				}.bind(this), i * 64);
+				}.bind(this), i * 20);
 			}
 		},
 		// run the cat
@@ -184,17 +184,15 @@
 			var t = 0;
 			for (var i = 1; i < 20; i++) {
 				t++;
-				var frame = 1;
 				var end = 0;
 				setTimeout(function () {
-					if (frame == 0) frame++;
-					if (frame == 5) frame = 2;
-						this.px += 34 * this.dirX[dir];
-						this.py += 26 * this.dirY[dir];
-					if (end++ == 18) {
+					this.px += 34 * this.dirX[dir];
+					this.py += 26 * this.dirY[dir];
+					end++;
+					if (end == 18) {
 						reset();
 					}
-				}.bind(this), t * 64);
+				}.bind(this), t * 20);
 			}
 		},
 		// Mengecek apakah bata hitam(kucing) dapat kabur
