@@ -16,7 +16,7 @@
 		return false;
 	}
 	var enabled = true, canEscape = false;
-	var addx0, addy0, addx1, cel, lx, ly, ld, lx2, ly2;
+	var addX0, addY, addX1, cel, lx, ly, ld, lx2, ly2;
 
 	// Constructor Cell
 	function Cell () {
@@ -37,7 +37,6 @@
 		var use = document.createElementNS(xmlns, "use");
 		use.cx = j + 2;
 		use.cy = i + 2;
-		this.id = use;
 		use.setAttributeNS(null, "class", "cell");
 		use.setAttributeNS(xlinkns, "xlink:href", "#init");
 		use.setAttributeNS(null, "transform", "translate(" + x + "," + y + ")");
@@ -55,7 +54,9 @@
 
 	// Function click , digunakan ketika player mengklik batu bata
 	function click(use, x, y) {
-		if (x == cat.x && y == cat.y) return;
+		if (x == cat.x && y == cat.y){
+			return;
+		}
 		if (enabled && cel[y][x].stat != 2) {
 			enabled = false;
 			use.setAttributeNS(null, "fill", "#937DC2");
@@ -73,10 +74,9 @@
 	function newGame () {
 		canEscape = false;
 		enabled = true;
-		addx0 = [1, 0, -1, -1, -1, 0];
-		addy0 = [0, 1, 1, 0, -1, -1];
-		addx1 = [1, 1, 0, -1, 0, 1];
-		addy1 = [0, 1, 1, 0, -1, -1];
+		addX0 = [1, 0, -1, -1, -1, 0];
+		addX1 = [1, 1, 0, -1, 0, 1];
+		addY = [0, 1, 1, 0, -1, -1];
 		cel = [];
 		for (var i = 0; i < 15; i++) {
 			cel[i] = [];
@@ -94,7 +94,6 @@
 		ld = [];
 		lx[0] = cat.x;
 		ly[0] = cat.y;
-		lmax = 1;
 		lx2 = [];
 		ly2 = [];
 		for (var i = 2; i < 12 - 2; i++) {
@@ -114,15 +113,16 @@
 		}
 		for (var i = 0; i < 12; i++) {
 			for (var j = 0; j < 12; j++) {
-				if (cel[i][j].stat != 1) 
-                continue;
+				if (cel[i][j].stat != 1){
+                	continue;
+				}
 				for (var k = 0; k < 6; k++) {
 					if(i % 2 == 0){
-						var nx = j + addx0[k];
+						var nx = j + addX0[k];
 					}else{
-						var nx = j + addx1[k];
+						var nx = j + addX1[k];
 					}
-					var ny = i + addy0[k];
+					var ny = i + addY[k];
 					if (cel[ny][nx].stat == 0) { // --> Value = 1, check  = 0
 						// Tepi edge diberi value 1 untuk menandakan bahwa itu edge
 						cel[i][j].isEdge = 1;
@@ -172,7 +172,7 @@
 		display: function (x, y) {
 			this.shape.setAttributeNS(null, "fill", "#480032")
 			this.shape.setAttributeNS(null, "transform", 'translate(' + x + ',' + y + ')');
-			this.shape.setAttributeNS(xlinkns, "xlink:href", "#ass");
+			this.shape.setAttributeNS(xlinkns, "xlink:href", "#bg");
 		},
 		// function jump untuk bata hitam pindah tempat
 		jump: function (dir) {
@@ -192,34 +192,32 @@
 			var x, y;
 			//i = 6 karena ada 6 bata di sekitar 1 bata hitam (kucing) yang di cek
 			for (var i = 0; i < 6; ++i) {
-				if (this.y % 2== 0){
-					x = this.x + addx1[i];
+				if (this.y % 2 == 0){
+					x = this.x + addX1[i];
 				}else{
-					x = this.x + addx0[i];
+					x = this.x + addX0[i];
 				}
-				y = this.y + addy0[i];
+				y = this.y + addY[i];
 				//kalau status posisi kucing saat ini = 0, maka kucing saat ini ada di edge 
 				if (cel[y][x].stat == 0) {
 					this.x = x;
 					this.y = y;
 					//menentukan arah kabur kucing
 					this.dir = i;
-					//gagal kabur
 					return false;
 				}
 			}
-			//berhasil kabur 
 			return true;
 		},
 		// Mengecek apakah bata hitam(cat) bisa escape dan menang
 		gotoWin: function () {
 			for (var i = 0; i < 6; ++i) {
 				if(this.y % 2 == 0){
-					var x = this.x + addx0[i];
+					var x = this.x + addX0[i];
 				}else{
-					var x = this.x + addx1[i];
+					var x = this.x + addX1[i];
 				}
-				var y = this.y + addy0[i];
+				var y = this.y + addY[i];
 				if (cel[y][x].stat != 1){
 					continue;
 				} 
@@ -240,10 +238,10 @@
 			lx[0] = this.x;
 			ly[0] = this.y;
 			var m = 1;
-			var n_change = 0;
+			var reachEdge = 0;
 			var nearestEdgeX = new Array(0);
 			var nearestEdgeY = new Array(0);
-			for (var iter = 1; iter < 200 && n_change == 0; iter++) {
+			for (var iter = 1; iter < 200 && reachEdge == 0; iter++) {
 				var p = 0;
 				for (var i = 0; i < m; ++i) {
 					var x = lx[i];
@@ -251,15 +249,15 @@
 					if (cel[y][x].isEdge){
 						nearestEdgeX.push(x);
 						nearestEdgeY.push(y);
-						n_change = 1;
+						reachEdge = 1;
 					}
 					for (var k = 0; k < 6; ++k) {
 						if(y % 2 == 0){
-							var kx = x + addx0[k];
+							var kx = x + addX0[k];
 						}else{
-							var kx = x + addx1[k];
+							var kx = x + addX1[k];
 						}
-						var ky = y + addy0[k];
+						var ky = y + addY[k];
 						if((cel[ky][kx].stat == 1) && (cel[ky][kx].po < 0)){
 							cel[ky][kx].po = iter;
 							lx2[p] = kx;
@@ -268,20 +266,24 @@
 						}
 					}
 				}
-				if (p == 0) break;
+				if (p == 0){
+					break;
+				}
 				for (var i = 0; i < p; ++i) {
 					lx[i] = lx2[i];
 					ly[i] = ly2[i];
 				}
 				m = p;
 			}
-			if (n_change == 0){
+			if (reachEdge == 0){
 				return true;
 			}
 
 			//Backtrack
 			p = nearestEdgeX.length;
-			if (p == 0) return true;
+			if (p == 0){
+				return true;
+			}
 			var d = Math.floor(Math.random() * p);
 			x = nearestEdgeX[d];
 			y = nearestEdgeY[d];
@@ -289,18 +291,20 @@
 				p = 0;
 				for (var k = 0; k < 6; ++k) {
 					if(y % 2 == 0){
-						kx = x + addx0[k];
+						kx = x + addX0[k];
 					}else{
-						kx = x + addx1[k];
+						kx = x + addX1[k];
 					}
-					ky = y + addy0[k];
+					ky = y + addY[k];
 					if ((cel[ky][kx].stat == 1) && (cel[ky][kx].po < cel[y][x].po) && (cel[ky][kx].po >= 0)){
 						lx[p] = kx;
 						ly[p] = ky;
 						p++;
 					}
 				}
-				if (p == 0) return true;
+				if (p == 0){
+					return true;
+				}
 				d = Math.floor(Math.random() * p);
 				x = lx[d];
 				y = ly[d];
@@ -310,11 +314,11 @@
 					this.dir = 0;
 					for (var k = 0; k < 6; ++k) {
 						if(y % 2 == 0){
-							kx = x + addx0[k]
+							kx = x + addX0[k]
 						}else{
-							kx = x + addx1[k];
+							kx = x + addX1[k];
 						}
-						ky = y + addy0[k];
+						ky = y + addY[k];
 						if (cel[ky][kx].po == 0) {
 							this.dir = (k + 3) % 6;
 						}
@@ -334,18 +338,22 @@
 			// BFS
 			for (var k = 0; k < 6; ++k) {
 				if(y % 2 == 0){
-					var kx = x + addx0[k];
+					var kx = x + addX0[k];
 				}else{
-					var kx = x + addx1[k];
+					var kx = x + addX1[k];
 				}
-				var ky = y + addy0[k];
-				if (cel[ky][kx].stat != 1) continue;
+				var ky = y + addY[k];
+				if (cel[ky][kx].stat != 1){
+					continue;
+				}
 				lx[p] = kx;
 				ly[p] = ky;
 				ld[p] = k;
 				p++;
 			}
-			if (p == 0) return true;
+			if (p == 0){
+				return true;
+			}
 			var d = Math.floor(Math.random() * p);
 			this.x = lx[d];
 			this.y = ly[d];
