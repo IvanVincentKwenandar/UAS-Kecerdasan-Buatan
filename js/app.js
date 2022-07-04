@@ -61,8 +61,8 @@
 			enabled = false;
 			use.setAttributeNS(null, "fill", "#937DC2");
 			if (canEscape) {
-				// membuat kucing lari dari cell
-				cat.run(cat.dir);
+				// game di reset
+				reset();
 			} else {
 				cel[y][x].stat = 2;
 				cat.play();
@@ -181,14 +181,8 @@
 			enabled = true;
 			this.display(this.px, this.py);
 		},
-		// run the cat
-		run: function (dir) {
-			this.px += 34 * this.dirX[dir];
-			this.py += 26 * this.dirY[dir];
-			reset();
-		},
 		// Mengecek apakah bata hitam(kucing) dapat kabur
-		goOut: function () {
+		cantGoOut: function () {
 			var x, y;
 			//i = 6 karena ada 6 bata di sekitar 1 bata hitam (kucing) yang di cek
 			for (var i = 0; i < 6; ++i) {
@@ -210,7 +204,7 @@
 			return true;
 		},
 		// Mengecek apakah bata hitam(cat) bisa escape dan menang
-		gotoWin: function () {
+		cantGotoWin: function () {
 			for (var i = 0; i < 6; ++i) {
 				if(this.y % 2 == 0){
 					var x = this.x + addX0[i];
@@ -233,7 +227,7 @@
 		},
 		
 		// find best direction
-		getNearest: function () {
+		cantGetNearest: function () {
 			cel[this.y][this.x].po = 0;
 			lx[0] = this.x;
 			ly[0] = this.y;
@@ -330,7 +324,7 @@
 		},
 
 		// pergerakan random bata hitam(cat)
-		randMove: function () {
+		cantRandMove: function () {
 			var x = this.x;
 			var y = this.y;
 			var p = 0;
@@ -360,7 +354,6 @@
 			this.dir = ld[d];
 			return false;
 		},
-
 		// main function saat bermain
 		play: function () {
 			for (var i = 0; i < 15; i++) {
@@ -369,17 +362,16 @@
 				}
 			}
 			var f = false;
-			if (this.goOut()) {
-				if (this.gotoWin()) {
-					if (this.getNearest()) {
-						if (this.randMove()){
+			if (this.cantGoOut()) {
+				if (this.cantGotoWin()) {
+					if (this.cantGetNearest()) {
+						if (this.cantRandMove()){
 							f = true;
 						}
 					}
 				}
 			}
 			if (f) {
-				// kucing kabur
 				enabled = false;
 				reset();
 			} else {
