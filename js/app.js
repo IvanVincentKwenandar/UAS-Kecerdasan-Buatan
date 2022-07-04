@@ -189,9 +189,7 @@
 					x = this.x + addX0[i];
 				}
 				y = this.y + addY[i];
-				//kalau status posisi kucing saat ini = 0, maka kucing saat ini ada di edge 
 				if (cel[y][x].stat == 0) {
-					this.dir = i;
 					return false;
 				}
 			}
