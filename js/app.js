@@ -58,10 +58,8 @@
 			return;
 		}
 		if (enabled && cel[y][x].stat != 2) {
-			enabled = false;
 			use.setAttributeNS(null, "fill", "#937DC2");
 			if (canEscape) {
-				// game di reset
 				reset();
 			} else {
 				cel[y][x].stat = 2;
