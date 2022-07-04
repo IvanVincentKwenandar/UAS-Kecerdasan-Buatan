@@ -190,6 +190,7 @@
 				}
 				y = this.y + addY[i];
 				if (cel[y][x].stat == 0) {
+					this.dir = i;
 					return false;
 				}
 			}
