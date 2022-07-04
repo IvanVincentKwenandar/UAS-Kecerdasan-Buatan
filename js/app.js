@@ -36,7 +36,6 @@
 		var use = document.createElementNS(xmlns, "use");
 		use.cx = j + 2;
 		use.cy = i + 2;
-		use.setAttributeNS(null, "class", "cell");
 		use.setAttributeNS(xlinkns, "xlink:href", "#init");
 		use.setAttributeNS(null, "transform", "translate(" + x + "," + y + ")");
 		if (this.stat == 2){
