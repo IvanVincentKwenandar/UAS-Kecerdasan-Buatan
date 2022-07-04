@@ -2,11 +2,11 @@
 
 	"use strict";
 
-	var xmlns   = "http://www.w3.org/2000/svg";
+	var xmlns = "http://www.w3.org/2000/svg";
 	var xlinkns = "http://www.w3.org/1999/xlink";
-	var board   = document.getElementById("board");
-	var game    = document.getElementById("game");
-	var resetB  = document.getElementById("reset");
+	var board = document.getElementById("board");
+	var game = document.getElementById("game");
+	var resetB = document.getElementById("reset");
 	resetB.onclick = resetB.ontouchstart = function (e) {
 		e.preventDefault();
 		if (enabled) {
@@ -20,9 +20,9 @@
 
 	// Constructor Cell
 	function Cell () {
-		this.stat  = 0;
-		this.isEdge   = 0;
-		this.po    = -1;
+		this.stat = 0;
+		this.isEdge = 0;
+		this.po = -1;
 	}
 
 	// Buat plot SVG
