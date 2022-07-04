@@ -23,7 +23,6 @@
 		this.stat  = 0;
 		this.isEdge   = 0;
 		this.po    = -1;
-		this.id    = null;
 	}
 
 	// Buat plot SVG
@@ -49,6 +48,7 @@
 			e.preventDefault();
 			click(this, this.cx, this.cy);
 		}
+		
 		board.appendChild(use);
 	}
 
