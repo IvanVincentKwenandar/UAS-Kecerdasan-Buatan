@@ -205,15 +205,14 @@
 		cantGotoWin: function () {
 			for (var i = 0; i < 6; ++i) {
 				if(this.y % 2 == 0){
-					var x = this.x + addX1[i];
-				}else{
 					var x = this.x + addX0[i];
+				}else{
+					var x = this.x + addX1[i];
 				}
 				var y = this.y + addY[i];
 				if (cel[y][x].stat != 1){
 					continue;
-				} 
-				else if (cel[y][x].isEdge) {
+				}else if (cel[y][x].isEdge) {
 					this.x = x;
 					this.y = y;
 					this.dir = i;
